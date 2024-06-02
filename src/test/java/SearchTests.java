@@ -12,7 +12,6 @@ public class SearchTests {
     void successfulSearchTest() {
 
         System.out.println("Hi world!");
-
         
         open("https://www.google.ru/");
         $("[name=q]").setValue("selenide").pressEnter();
