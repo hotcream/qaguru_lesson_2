@@ -10,6 +10,10 @@ import static com.codeborne.selenide.Selenide.open;
 public class SearchTests {
     @Test
     void successfulSearchTest() {
+
+        System.out.println("Hi world!");
+
+        
         open("https://www.google.ru/");
         $("[name=q]").setValue("selenide").pressEnter();
         $("[id=search]").shouldHave(text("https://selenide.org"));
