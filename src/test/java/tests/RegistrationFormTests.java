@@ -1,19 +1,16 @@
 package tests;
 
+import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.Configuration;
-import com.codeborne.selenide.Selenide;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
 
-import static com.codeborne.selenide.Condition.text;
+import static com.codeborne.selenide.Condition.exactText;
 import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.$;
-import static com.codeborne.selenide.Selenide.$x;
 import static com.codeborne.selenide.Selenide.open;
-
 
 public class RegistrationFormTests {
 
@@ -24,12 +21,7 @@ public class RegistrationFormTests {
         Configuration.browserSize = "1920x1080";
         Configuration.baseUrl = "https://demoqa.com";
         Configuration.pageLoadStrategy = "eager";
-        file = new File("path/to/your/file.txt");
-    }
-
-    @AfterAll
-    static void afterAll() {
-        Selenide.closeWebDriver();
+        file = new File("src/test/resources/hi.jpg");
     }
 
     @Test
@@ -38,7 +30,7 @@ public class RegistrationFormTests {
         $("#firstName").setValue("Henri");
         $("#lastName").setValue("Chinaski");
         $("#userEmail").setValue("test@gmail.pu");
-        $(".custom-radio", 1).click();
+        $(".custom-radio", 0).click();
         $("#userNumber").setValue("9998887776");
         $("#dateOfBirthInput").click();
         $(".react-datepicker__year-select").selectOptionByValue("1990");
@@ -53,26 +45,20 @@ public class RegistrationFormTests {
         $("#state").$x(".//div[text()='NCR']").click();
         $("#city").click();
         $("#city").$x(".//div[text()='Delhi']").click();
-        $("#uploadFile").uploadFile(file);
-
-
-        //$("#subjectsWrapper").click();
-
-
-
-
-        //$("#dateOfBirthInput").setValue("02 Nov 1993");
-
-
-
-
-
-
-
-
-
-
-
-        $("[id=search]").shouldHave(text("https://selenide.org"));
+        $("#uploadPicture").uploadFile(file);
+        $("#submit").click();
+        $("#example-modal-sizes-title-lg").shouldHave(exactText("Thanks for submitting the form"));
+        $(".table-responsive").shouldHave(
+                Condition.text("Student Name Henri Chinaski"),
+                Condition.text("Student Email test@gmail.pu\n"),
+                Condition.text("Gender Male"),
+                Condition.text("Mobile 9998887776"),
+                Condition.text("Date of Birth 10 October,1990"),
+                Condition.text("Subjects Physics"),
+                Condition.text("Hobbies Music"),
+                Condition.text("Picture hi.jpg"),
+                Condition.text("Address Bangkok"),
+                Condition.text("State and City NCR Delhi")
+        );
     }
 }
