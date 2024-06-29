@@ -5,23 +5,21 @@ import com.codeborne.selenide.Configuration;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import java.io.File;
-
 import static com.codeborne.selenide.Condition.exactText;
 import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.$;
+import static com.codeborne.selenide.Selenide.executeJavaScript;
 import static com.codeborne.selenide.Selenide.open;
 
 public class RegistrationFormTests {
-
-    static File file;
 
     @BeforeAll
     static void beforeAll() {
         Configuration.browserSize = "1920x1080";
         Configuration.baseUrl = "https://demoqa.com";
         Configuration.pageLoadStrategy = "eager";
-        file = new File("src/test/resources/hi.jpg");
+        executeJavaScript("$('#fixedban').remove()");
+        executeJavaScript("$('footer').remove()");
     }
 
     @Test
@@ -45,7 +43,7 @@ public class RegistrationFormTests {
         $("#state").$x(".//div[text()='NCR']").click();
         $("#city").click();
         $("#city").$x(".//div[text()='Delhi']").click();
-        $("#uploadPicture").uploadFile(file);
+        $("#uploadPicture").uploadFromClasspath("hi.jpg");
         $("#submit").click();
         $("#example-modal-sizes-title-lg").shouldHave(exactText("Thanks for submitting the form"));
         $(".table-responsive").shouldHave(
