@@ -1,62 +1,75 @@
 package tests;
 
-import com.codeborne.selenide.Condition;
-import com.codeborne.selenide.Configuration;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import pages.RegistrationPage;
 
-import static com.codeborne.selenide.Condition.exactText;
-import static com.codeborne.selenide.Selectors.byText;
-import static com.codeborne.selenide.Selenide.$;
-import static com.codeborne.selenide.Selenide.executeJavaScript;
-import static com.codeborne.selenide.Selenide.open;
+public class RegistrationFormTests extends BaseTest {
 
-public class RegistrationFormTests {
+    RegistrationPage registrationPage = new RegistrationPage();
 
-    @BeforeAll
-    static void beforeAll() {
-        Configuration.browserSize = "1920x1080";
-        Configuration.baseUrl = "https://demoqa.com";
-        Configuration.pageLoadStrategy = "eager";
-        executeJavaScript("$('#fixedban').remove()");
-        executeJavaScript("$('footer').remove()");
+    @Test
+    void checkRegistrationFormAllFields() {
+        registrationPage.openPage()
+                        .setFirstName("Henri")
+                        .setLastName("Chinaski")
+                        .setEmail("test@gmail.pu")
+                        .setGender("Male")
+                        .setUserNumber("9998887776")
+                        .setDateOfBirth("10", "October", "1991")
+                        .setSubject("Physics")
+                        .scrollToSubmitButton()
+                        .setHobbies("Sports")
+                        .setCurrentAddress("Bangkok")
+                        .setState("NCR")
+                        .setCity("Delhi")
+                        .uploadPicture("hi.jpg")
+                        .clickSubmitButton()
+                        .checkResultTitle("Thanks for submitting the form")
+                        .checkResultTable("Student Name", "Henri Chinaski")
+                        .checkResultTable("Student Email", "test@gmail.pu")
+                        .checkResultTable("Gender", "Male")
+                        .checkResultTable("Mobile", "9998887776")
+                        .checkResultTable("Date of Birth", "10 October,1991")
+                        .checkResultTable("Subjects", "Physics")
+                        .checkResultTable("Picture", "hi.jpg")
+                        .checkResultTable("Address", "Bangkok")
+                        .checkResultTable("State and City", "NCR Delhi");
     }
 
     @Test
-    void registrationFormTest() {
-        open("/automation-practice-form");
-        $("#firstName").setValue("Henri");
-        $("#lastName").setValue("Chinaski");
-        $("#userEmail").setValue("test@gmail.pu");
-        $(".custom-radio", 0).click();
-        $("#userNumber").setValue("9998887776");
-        $("#dateOfBirthInput").click();
-        $(".react-datepicker__year-select").selectOptionByValue("1990");
-        $(".react-datepicker__month-select").selectOptionByValue("9");
-        $(".react-datepicker__day--010").click();
-        $(".btn-primary").scrollTo();
-        $("#hobbiesWrapper").$(".custom-control-label", 2).click();
-        $("#subjectsInput").setValue("P");
-        $(byText("Physics")).click();
-        $("#currentAddress").setValue("Bangkok");
-        $("#state").click();
-        $("#state").$x(".//div[text()='NCR']").click();
-        $("#city").click();
-        $("#city").$x(".//div[text()='Delhi']").click();
-        $("#uploadPicture").uploadFromClasspath("hi.jpg");
-        $("#submit").click();
-        $("#example-modal-sizes-title-lg").shouldHave(exactText("Thanks for submitting the form"));
-        $(".table-responsive").shouldHave(
-                Condition.text("Student Name Henri Chinaski"),
-                Condition.text("Student Email test@gmail.pu\n"),
-                Condition.text("Gender Male"),
-                Condition.text("Mobile 9998887776"),
-                Condition.text("Date of Birth 10 October,1990"),
-                Condition.text("Subjects Physics"),
-                Condition.text("Hobbies Music"),
-                Condition.text("Picture hi.jpg"),
-                Condition.text("Address Bangkok"),
-                Condition.text("State and City NCR Delhi")
-        );
+    void checkRegistrationFormRequiredFields() {
+        registrationPage.openPage()
+                .setFirstName("Henri")
+                .setLastName("Chinaski")
+                .setEmail("test@gmail.pu")
+                .setGender("Male")
+                .setUserNumber("9998887776")
+                .setDateOfBirth("10", "October", "1991")
+                .clickSubmitButton()
+                .checkResultTable("Student Name", "Henri Chinaski")
+                .checkResultTable("Student Email", "test@gmail.pu")
+                .checkResultTable("Gender", "Male")
+                .checkResultTable("Mobile", "9998887776")
+                .checkResultTable("Date of Birth", "10 October,1991")
+                .checkResultTitle("Thanks for submitting the form");
+    }
+
+    @Test
+    void checkRegistrationFormWithoutLastName() {
+        registrationPage.openPage()
+                .setFirstName("Henri")
+                .setEmail("test@gmail.pu")
+                .setGender("Male")
+                .setUserNumber("9998887776")
+                .setDateOfBirth("10", "October", "1991")
+                .setSubject("Physics")
+                .scrollToSubmitButton()
+                .setHobbies("Sports")
+                .setCurrentAddress("Bangkok")
+                .setState("NCR")
+                .setCity("Delhi")
+                .uploadPicture("hi.jpg")
+                .clickSubmitButton()
+                .checkTitleMissing();
     }
 }
