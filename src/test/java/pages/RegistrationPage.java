@@ -2,6 +2,7 @@ package pages;
 
 import com.codeborne.selenide.SelenideElement;
 import pages.components.CalendarComponent;
+import pages.components.ResultTableComponent;
 
 import static com.codeborne.selenide.Condition.exactText;
 import static com.codeborne.selenide.Condition.text;
@@ -31,6 +32,7 @@ public class RegistrationPage {
             resultTable = $(".table-responsive");
 
     CalendarComponent calendarComponent = new CalendarComponent();
+    ResultTableComponent resultTableComponent = new ResultTableComponent();
 
     public RegistrationPage openPage() {
         open("/automation-practice-form");

@@ -5,6 +5,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import static com.codeborne.selenide.CollectionCondition.texts;
+import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
@@ -28,6 +29,18 @@ public class SelenideLesson1Tests {
         $("#wiki-tab").click();
         $$("#wiki-body").shouldHave(texts("Soft assertions"));
         $(byText("Soft assertions")).click();
-        $$(".markdown-body").shouldHave(texts("JUnit5"));
+        $("#wiki-body").shouldHave(text("""
+                       @ExtendWith({SoftAssertsExtension.class})
+                        class Tests {
+                            @Test
+                            void test() {
+                                Configuration.assertionMode = SOFT;
+                                open("page.html");
+
+                                $("#first").should(visible).click();
+                                $("#second").should(visible).click();
+                            }
+                        }
+                """));
     }
 }
